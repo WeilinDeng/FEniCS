@@ -1,0 +1,22 @@
+"""
+http://fenicsproject.org/qa/1478/roller-boundary-condition
+With a domain like a rectangle or a cube the boundaries are normal to the Cartesian coordinate axes so it will suffice to impose a DirichletBC on the appropriate component of your vector. For the boundary x=0 the normal is n=ex so u.n = ux where u = (ux,uy,uz).
+
+Here is some example code for a cube with three free-slip boundary conditions along the planes x=0, y=0, and z=0:
+"""
+# Create mesh and define function space
+lx, ly, lz, nx, ny, nz = 1.0, 1.0, 1.0, 8, 8, 8
+mesh = BoxMesh(0, 0, 0, lx, ly, lz, nx, ny, nz)
+V = VectorFunctionSpace(mesh, "CG", 1)
+
+# Boundaries
+def left(x): return x[0] < DOLFIN_EPS
+def bottom(x): return x[1] < DOLFIN_EPS
+def front(x): return x[2] < DOLFIN_EPS
+
+# Define Dirichlet boundary
+zero = Constant(0.0)
+bc1 = DirichletBC(V.sub(0), zero, left)     # u.n = 0
+bc2 = DirichletBC(V.sub(1), zero, bottom)   # u.n = 0
+bc3 = DirichletBC(V.sub(2), zero, front)    # u.n = 0
+bc = [bc1, bc2, bc3]
