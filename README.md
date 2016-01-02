@@ -1,2 +1,2 @@
-# Python
-This repository is for created for learning Python. 
+# FeniCS
+This repository is for created for learning FeniCS. 
